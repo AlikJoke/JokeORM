@@ -38,6 +38,50 @@ public class EntityValidator {
 		check(args[0]);
 	}
 
+	@Pointcut(value = "execution(* ru.projects.joke.orm.core.operations.JokeOperations.removeById(..))")
+	public void beforeRemoveByIdQueryPointCut() {
+
+	}
+
+	@Before("beforeRemoveByIdQueryPointCut()")
+	public void beforeRemoveByIdQueryAdvice(ProceedingJoinPoint pjp) throws Throwable {
+		Object[] args = pjp.getArgs();
+		check(args[0]);
+	}
+
+	@Pointcut(value = "execution(* ru.projects.joke.orm.core.operations.JokeOperations.remove(..))")
+	public void beforeRemoveQueryPointCut() {
+
+	}
+
+	@Before("beforeRemoveQueryPointCut()")
+	public void beforeRemoveQueryAdvice(ProceedingJoinPoint pjp) throws Throwable {
+		Object[] args = pjp.getArgs();
+		check(args[0]);
+	}
+
+	@Pointcut(value = "execution(* ru.projects.joke.orm.core.operations.JokeOperations.findById(..))")
+	public void beforeFindByIdQueryPointCut() {
+
+	}
+
+	@Before("beforeFindByIdQueryPointCut()")
+	public void beforeFindByIdQueryAdvice(ProceedingJoinPoint pjp) throws Throwable {
+		Object[] args = pjp.getArgs();
+		check(args[0]);
+	}
+
+	@Pointcut(value = "execution(* ru.projects.joke.orm.core.operations.JokeOperations.findAll(..))")
+	public void beforeFindAllQueryPointCut() {
+
+	}
+
+	@Before("beforeFindAllPointCut()")
+	public void beforeFindAllAdvice(ProceedingJoinPoint pjp) throws Throwable {
+		Object[] args = pjp.getArgs();
+		check(args[0]);
+	}
+
 	private void check(Object arg) {
 		if (arg == null || !core.getEntityClasses().contains(arg.getClass()))
 			throw new JokeException("Illegal type of entity!");

@@ -2,19 +2,26 @@ package ru.projects.joke.orm.core.operations;
 
 import java.util.List;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
+
+import org.hibernate.validator.constraints.NotEmpty;
+
 public interface JokeOperations<T> {
 
-	void save(T entity);
-	
-	void update(T entity);
-	
-	boolean removeById(Class<T> entityClass, Object primaryKey);
-	
-	boolean remove(T entity);
-	
-	T findById(Class<T> entityClass, Object primaryKey);
-	
-	List<T> findAll(Class<T> entityClass);
-	
-	void executeQuery(String nativeQuery);
+	void save(@NotNull T entity);
+
+	void update(@NotNull T entity);
+
+	boolean removeById(@NotNull Class<T> entityClass, @NotNull Object primaryKey);
+
+	boolean remove(@NotNull T entity);
+
+	@Null
+	T findById(@NotNull Class<T> entityClass, @NotNull Object primaryKey);
+
+	@NotNull
+	List<T> findAll(@NotNull Class<T> entityClass);
+
+	void executeQuery(@NotNull @NotEmpty String nativeQuery);
 }

@@ -34,6 +34,7 @@ public class CoreImpl implements Core {
 
 	private Set<Class<?>> entityClasses = Sets.newHashSet();
 	private Map<Class<?>, Map<String, String>> clazz2fieldsMap = Maps.newHashMap();
+	private Map<Class<?>, List<String>> primaryKeysMap = Maps.newHashMap();
 
 	@PostConstruct
 	public void loadContext() {
@@ -68,6 +69,8 @@ public class CoreImpl implements Core {
 				if (field.isAnnotationPresent(JokeIndex.class))
 					indexQueries.add(createIndexQuery(field.getAnnotation(JokeIndex.class), tableName));
 			});
+
+			primaryKeysMap.put(clazz, primaryKeys);
 			clazz2fieldsMap.put(clazz, fieldsMap);
 
 			String tableDefinition = createTableQuery(tableName, primaryKeys, column2typeMap);
@@ -182,6 +185,30 @@ public class CoreImpl implements Core {
 	@Override
 	public Map<String, String> getFieldsTranslator(Class<?> entityClass) {
 		return clazz2fieldsMap.get(entityClass);
+	}
+
+	public <T> void saveEntity(T entity) {
+		Map<String, Object> param2valueMap = getParamMap(entity);
+	}
+	
+	private Map<String, Object> getParamMap(Object entity) {
+		Map<String, String> translator = getFieldsTranslator(entity.getClass());
+		Map<String, Object> param2value = Maps.newHashMap();
+		translator.keySet()
+				.forEach(fieldName -> param2value.put(translator.get(fieldName), getFieldValue(fieldName, entity)));
+		
+		return param2value;
+	}
+
+	private Object getFieldValue(String fieldName, Object entity) {
+		if (StringUtils.isEmpty(fieldName))
+			throw new JokeException("Name of field can't be empty or null!");
+
+		try {
+			return entity.getClass().getDeclaredField(fieldName).get(entity);
+		} catch (Exception e) {
+			throw new JokeException(e);
+		}
 	}
 
 }

@@ -59,9 +59,4 @@ public class JokeJdbcOperationsImpl<T> implements JokeOperations<T> {
 		// TODO Auto-generated method stub
 
 	}
-
-	private void checkEntity(Class<?> entityClass) {
-		if (!core.getEntityClasses().contains(entityClass))
-			throw new JokeException(String.format("Can't define type of entity = '%s'!", entityClass.getName()));
-	}
 }
